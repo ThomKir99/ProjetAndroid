@@ -1,5 +1,6 @@
 package com.example.thomaskirouac_antoinedumasfortin_daveloignon.projetandroid;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,8 +15,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.scroll_view_image);
-        initListener();
+        setContentView(R.layout.activity_main);
+      //  initListener();
+        Intent i = new Intent(this, TakePhoto.class);
+        startActivity(i);
     }
 
     private void initListener() {
