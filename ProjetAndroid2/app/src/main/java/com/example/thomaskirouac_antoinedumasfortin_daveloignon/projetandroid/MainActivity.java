@@ -1,5 +1,6 @@
 package com.example.thomaskirouac_antoinedumasfortin_daveloignon.projetandroid;
 
+import android.Manifest;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import android.support.v4.app.ActivityCompat;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.support.annotation.NonNull;
+import com.google.android.gms.tasks.*;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,25 +25,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      //  initListener();
-        Intent i = new Intent(this, TakePhoto.class);
-        startActivity(i);
+
+        initListener();
+        //Intent i = new Intent(this, TakePhoto.class);
+        //startActivity(i);
+
     }
 
     private void initListener() {
-        /*ImageView imgFavorite = (ImageView) findViewById(R.id.imageView_futurama);
-        imgFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showOnMap();
-            }
-        });*/
 
-        Button btnScrollUp = (Button) findViewById(R.id.btn_scrollUp);
-        btnScrollUp.setOnClickListener(new View.OnClickListener() {
+        initButton();
+
+    }
+
+    private void initButton(){
+        final Button btn_coord = findViewById(R.id.btn_coord);
+
+        btn_coord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scrollUp();
+                showCurrentCoord();
             }
         });
     }
@@ -46,12 +56,38 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.animate().translationY(linearLayout.getHeight());
     }
 
-    private void showOnMap() {
+    private void showCurrentCoord(){
+        FusedLocationProviderClient fusedLocationProviderClient;
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        ImageView imgFavorite = (ImageView) findViewById(R.id.imageView_futurama);
-        imgFavorite.animate().rotation(imgFavorite.getRotation() + 360);
-        Toast.makeText(MainActivity.this,
-                "The favorite list would appear on clicking this icon",
-                Toast.LENGTH_LONG).show();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    2);
+        }
+        else{
+            try
+            {
+                Task location = fusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()){
+                            Location currentLocation = (Location) task.getResult();
+                            Toast.makeText(MainActivity.this, "Latitude: "+ currentLocation.getLatitude() + "\nLongitude: " + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this, "Coord declined", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+            catch (SecurityException e)
+            {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
+
 }
