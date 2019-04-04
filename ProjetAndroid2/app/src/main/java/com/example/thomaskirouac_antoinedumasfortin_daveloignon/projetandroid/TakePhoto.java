@@ -37,8 +37,18 @@ public class TakePhoto extends AppCompatActivity {
           dispatchTakePictureIntent();
             }
         });
+        findViewById(R.id.btn_seePicture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startSeePhotoView();
+            }
+        });
     }
 
+    private void startSeePhotoView() {
+        Intent i = new Intent(this, SeePicture.class);
+        startActivity(i);
+    }
 
 
     @Override
@@ -111,6 +121,7 @@ public class TakePhoto extends AppCompatActivity {
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        MainActivity.currentUser.addPhoto(new Photo(bitmap));
         imageView.setImageBitmap(bitmap);
     }
 }

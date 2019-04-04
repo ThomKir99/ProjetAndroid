@@ -12,46 +12,14 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static User currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentUser = new User();
         setContentView(R.layout.activity_main);
       //  initListener();
         Intent i = new Intent(this, TakePhoto.class);
         startActivity(i);
-    }
-
-    private void initListener() {
-        /*ImageView imgFavorite = (ImageView) findViewById(R.id.imageView_futurama);
-        imgFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showOnMap();
-            }
-        });*/
-
-        Button btnScrollUp = (Button) findViewById(R.id.btn_scrollUp);
-        btnScrollUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scrollUp();
-            }
-        });
-    }
-
-    private void scrollUp() {
-        ScrollView scrollView = (ScrollView)  findViewById(R.id.scrollView);
-        LinearLayout linearLayout = (LinearLayout)  findViewById(R.id.linearLayout);
-
-        linearLayout.animate().translationY(linearLayout.getHeight());
-    }
-
-    private void showOnMap() {
-
-        ImageView imgFavorite = (ImageView) findViewById(R.id.imageView_futurama);
-        imgFavorite.animate().rotation(imgFavorite.getRotation() + 360);
-        Toast.makeText(MainActivity.this,
-                "The favorite list would appear on clicking this icon",
-                Toast.LENGTH_LONG).show();
     }
 }
