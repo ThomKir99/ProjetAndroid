@@ -1,8 +1,13 @@
 package com.example.thomaskirouac_antoinedumasfortin_daveloignon.projetandroid;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -13,30 +18,38 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class TakePhoto extends AppCompatActivity {
     String currentPhotoPath;
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private float currentDegree = 0f;
+    private static SensorManager mySensorManager;
+    TextView orrientationZ;
+    private boolean sersorrunning;
+    private double orientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_photo);
         initListener();
+        initialisationSensor();
     }
 
     private void initListener() {
         findViewById(R.id.btn_takePicture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-          dispatchTakePictureIntent();
+                dispatchTakePictureIntent();
             }
         });
         findViewById(R.id.btn_seePicture).setOnClickListener(new View.OnClickListener() {
@@ -45,6 +58,18 @@ public class TakePhoto extends AppCompatActivity {
                 startSeePhotoView();
             }
         });
+
+        findViewById(R.id.btn_backToMenu2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backToMenu();
+            }
+        });
+    }
+
+    private void backToMenu(){
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
     }
 
     private void startSeePhotoView() {
@@ -52,11 +77,47 @@ public class TakePhoto extends AppCompatActivity {
         startActivity(i);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         setPic();
+    }
 
+    private void initialisationSensor(){
+
+        mySensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        List<Sensor> mySensors = mySensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+
+        if(mySensors.size() > 0){
+            mySensorManager.registerListener(mySensorEventListener, mySensors.get(0), SensorManager.SENSOR_DELAY_NORMAL);
+            sersorrunning = true;
+        }
+        else{
+            Toast.makeText(this, "No ORIENTATION Sensor", Toast.LENGTH_LONG).show();
+            sersorrunning = false;
+            finish();
+        }
+    }
+
+    private SensorEventListener mySensorEventListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+
+            orientation = Math.toDegrees(event.values[0]);
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(sersorrunning){
+            mySensorManager.unregisterListener(mySensorEventListener);
+            Toast.makeText(this, "unregisterListener", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private File createImageFile() throws IOException {
@@ -118,7 +179,9 @@ public class TakePhoto extends AppCompatActivity {
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        MainActivity.currentUser.addPhoto(new Photo(bitmap));
+        Photo photo = new Photo(bitmap);
+        photo.setOrientation(orientation);
+        MainActivity.currentUser.addPhoto(photo);
         imageView.setImageBitmap(bitmap);
         setPictureAnimation(imageView);
 
@@ -127,5 +190,9 @@ public class TakePhoto extends AppCompatActivity {
     public void setPictureAnimation(ImageView imageView) {
         Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.my_faid_in_animation);
         imageView.startAnimation(fadeInAnimation);
+    }
+
+    public void getOrientation(){
+
     }
 }

@@ -7,7 +7,9 @@ public class Photo {
 
     private Bitmap photoBitmap;
     private Bitmap thumbnail;
-
+    private double orientation;
+    private float longitude;
+    private float latitude;
 
     public Photo(Bitmap photoBitMap){
         this.photoBitmap = photoBitMap;
@@ -22,5 +24,27 @@ public class Photo {
         return thumbnail;
     }
 
+    public double getOrientation() {
+        return orientation;
+    }
 
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setOrientation(double orientation) {
+        this.orientation = orientation;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
 }

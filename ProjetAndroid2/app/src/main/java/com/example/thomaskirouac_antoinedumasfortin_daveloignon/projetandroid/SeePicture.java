@@ -1,11 +1,13 @@
 package com.example.thomaskirouac_antoinedumasfortin_daveloignon.projetandroid;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +23,23 @@ public class SeePicture extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_see_picture);
         addPhoto();
+        setListener();
+    }
+
+    private void setListener(){
+        Button btn_backToMenu = findViewById(R.id.btn_backToMenu);
+
+        btn_backToMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backToMenu();
+            }
+        });
+    }
+
+    private void backToMenu(){
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
     }
 
     private void addPhoto() {
@@ -46,7 +65,8 @@ public class SeePicture extends AppCompatActivity {
     private void toastMe(ImageButton imageView) {
         ArrayList<Photo> photos = MainActivity.currentUser.getPhoto();
         Photo photo = photos.get(imageView.getId());
-        showConfirmDialog();
+        Toast.makeText(this, String.valueOf(photo.getOrientation()),Toast.LENGTH_SHORT).show();
+        //showConfirmDialog();
     }
 
     private void showConfirmDialog() {
