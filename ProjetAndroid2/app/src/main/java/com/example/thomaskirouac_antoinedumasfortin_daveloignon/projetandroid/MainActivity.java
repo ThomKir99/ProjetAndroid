@@ -2,6 +2,7 @@ package com.example.thomaskirouac_antoinedumasfortin_daveloignon.projetandroid;
 
 import android.Manifest;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import android.support.v4.app.ActivityCompat;
 import android.content.pm.PackageManager;
@@ -67,20 +71,46 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             try
-            {
-                Task location = fusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()){
-                            Location currentLocation = (Location) task.getResult();
-                            Toast.makeText(MainActivity.this, "Latitude: "+ currentLocation.getLatitude() + "\nLongitude: " + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                {
+                    LocationRequest locationRequest = new LocationRequest();
+                    locationRequest.setInterval(100);
+                    locationRequest.setFastestInterval(0);
+                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+                    LocationCallback locationCallback = new LocationCallback(){
+                        @Override
+                        public void onLocationResult(LocationResult locationResult) {
+                            super.onLocationResult(locationResult);
+
+                            if(locationResult != null){
+                                Toast.makeText(MainActivity.this, "Latitude: "+ locationResult.getLastLocation().getLatitude() + "\nLongitude: " + locationResult.getLastLocation().getLongitude(), Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(MainActivity.this, "You have no location", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else{
-                            Toast.makeText(MainActivity.this, "Coord declined", Toast.LENGTH_SHORT).show();
-                        }
+                    };
+
+                    if (fusedLocationProviderClient.getLastLocation() == null){
+                        fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback,null);
+                    }else {
+                        Task<Location> location = fusedLocationProviderClient.getLastLocation();
+                        location.addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location currentlocations) {
+                                if(currentlocations != null){
+                                    Toast.makeText(MainActivity.this, "Latitude: "+ currentlocations.getLatitude() + "\nLongitude: " + currentlocations.getLongitude(), Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    Toast.makeText(MainActivity.this, "You have no location", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
-                });
+
+
+
+
             }
             catch (SecurityException e)
             {
