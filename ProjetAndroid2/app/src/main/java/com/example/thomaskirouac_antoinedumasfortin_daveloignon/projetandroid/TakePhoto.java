@@ -10,6 +10,8 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -58,17 +60,16 @@ public class TakePhoto extends AppCompatActivity {
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,
+                ".jpg",
+                storageDir
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
+
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
@@ -101,21 +102,17 @@ public class TakePhoto extends AppCompatActivity {
 
     private void setPic() {
         ImageView imageView = findViewById(R.id.imageView_photoTaken);
-        // Get the dimensions of the View
         int targetW = imageView.getWidth();
         int targetH = imageView.getHeight();
 
-        // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
 
-        // Determine how much to scale down the image
         int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
 
-        // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
@@ -123,5 +120,12 @@ public class TakePhoto extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         MainActivity.currentUser.addPhoto(new Photo(bitmap));
         imageView.setImageBitmap(bitmap);
+        setPictureAnimation(imageView);
+
+    }
+
+    public void setPictureAnimation(ImageView imageView) {
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.my_faid_in_animation);
+        imageView.startAnimation(fadeInAnimation);
     }
 }
