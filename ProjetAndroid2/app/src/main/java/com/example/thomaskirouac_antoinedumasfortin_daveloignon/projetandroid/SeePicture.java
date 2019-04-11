@@ -46,8 +46,10 @@ public class SeePicture extends AppCompatActivity {
     private void toastMe(ImageButton imageView) {
         ArrayList<Photo> photos = MainActivity.currentUser.getPhoto();
         Photo photo = photos.get(imageView.getId());
+        showConfirmDialog();
+    }
 
-
+    private void showConfirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
         builder.setTitle("Are you sure");
@@ -68,7 +70,6 @@ public class SeePicture extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-
     }
 
     private void showMessage(String text) {
