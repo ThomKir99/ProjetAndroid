@@ -61,7 +61,7 @@ public class SeePicture extends AppCompatActivity {
                         showMessage("confirm");
                     }
                 });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 showMessage("cancel");
