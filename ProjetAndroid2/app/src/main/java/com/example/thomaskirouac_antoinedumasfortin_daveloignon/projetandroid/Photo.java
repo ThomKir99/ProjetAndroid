@@ -21,4 +21,6 @@ public class Photo {
     public Bitmap getThumbnail() {
         return thumbnail;
     }
+
+
 }

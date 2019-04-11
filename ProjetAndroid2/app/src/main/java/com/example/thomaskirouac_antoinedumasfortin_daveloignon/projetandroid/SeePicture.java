@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class SeePicture extends AppCompatActivity {
 
     @Override
@@ -26,9 +28,7 @@ public class SeePicture extends AppCompatActivity {
 
           final ImageButton imageView = new ImageButton(this);
           imageView.setImageBitmap(photo.getThumbnail());
-          imageView.setId(R.id.button +linearLayout.getChildCount() );
-
-
+          imageView.setId(linearLayout.getChildCount());
           imageView.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
@@ -42,7 +42,9 @@ public class SeePicture extends AppCompatActivity {
     }
 
     private void toastMe(ImageButton imageView) {
-        Toast.makeText(this,String.valueOf(imageView.getId()),Toast.LENGTH_SHORT).show();
+        ArrayList<Photo> photos = MainActivity.currentUser.getPhoto();
+        Photo photo = photos.get(imageView.getId());
+        Toast.makeText(this,String.valueOf(photo),Toast.LENGTH_SHORT).show();
 
     }
 }
