@@ -2,14 +2,13 @@ package com.example.thomaskirouac_antoinedumasfortin_daveloignon.projetandroid;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -53,7 +52,7 @@ public class SeePicture extends AppCompatActivity {
           imageView.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                  toastMe(imageView);
+                  showOnMap(imageView);
               }
           });
           linearLayout.addView(imageView);
@@ -92,7 +91,20 @@ public class SeePicture extends AppCompatActivity {
         dialog.show();
     }
 
+    private void showOnMap(ImageButton imageView) {
+        ArrayList<Photo> photos = MainActivity.currentUser.getPhoto();
+        Photo photo = photos.get(imageView.getId());
+        String longitude = String.valueOf(photo.getLongitude());
+        String latitude = String.valueOf(photo.getLatitude());
+
+        Uri gmmIntentUri = Uri.parse("google.streetview:cbll="+longitude+","+latitude);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+    }
+
     private void showMessage(String text) {
+
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }
