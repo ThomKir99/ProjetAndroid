@@ -61,13 +61,6 @@ public class SeePicture extends AppCompatActivity {
         }
     }
 
-    private void toastMe(ImageButton imageView) {
-        ArrayList<Photo> photos = MainActivity.currentUser.getPhoto();
-        Photo photo = photos.get(imageView.getId());
-        Toast.makeText(this, String.valueOf(photo.getOrientation()),Toast.LENGTH_SHORT).show();
-        //showConfirmDialog();
-    }
-
     private void showConfirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
