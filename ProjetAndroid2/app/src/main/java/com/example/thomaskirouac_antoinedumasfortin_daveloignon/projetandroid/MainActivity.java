@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initButton(){
-        final Button btn_coord = findViewById(R.id.btn_coord);
         final ImageButton btn_takePicture = findViewById(R.id.btn_takePicture);
         final ImageButton btn_picture = findViewById(R.id.btn_picture);
 
@@ -55,21 +54,12 @@ public class MainActivity extends AppCompatActivity {
                 picturePage();
             }
         });
-
         btn_takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicturePage();
             }
         });
-
-        btn_coord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCurrentCoord();
-            }
-        });
-
     }
 
     private void takePicturePage(){
@@ -82,60 +72,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    private void showCurrentCoord(){
-        FusedLocationProviderClient fusedLocationProviderClient;
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    2);
-        }
-        else{
-            try
-                {
-                    LocationRequest locationRequest = new LocationRequest();
-                    locationRequest.setInterval(100);
-                    locationRequest.setFastestInterval(0);
-                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-                    LocationCallback locationCallback = new LocationCallback(){
-                        @Override
-                        public void onLocationResult(LocationResult locationResult) {
-                            super.onLocationResult(locationResult);
-
-                            if(locationResult != null){
-                                Toast.makeText(MainActivity.this, "Latitude: "+ locationResult.getLastLocation().getLatitude() + "\nLongitude: " + locationResult.getLastLocation().getLongitude(), Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                Toast.makeText(MainActivity.this, "You have no location", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    };
-
-                    if (fusedLocationProviderClient.getLastLocation() == null){
-                        fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback,null);
-                    }else {
-                        Task<Location> location = fusedLocationProviderClient.getLastLocation();
-                        location.addOnSuccessListener(new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location currentlocations) {
-                                if(currentlocations != null){
-                                    Toast.makeText(MainActivity.this, "Latitude: "+ currentlocations.getLatitude() + "\nLongitude: " + currentlocations.getLongitude(), Toast.LENGTH_SHORT).show();
-                                }
-                                else{
-                                    Toast.makeText(MainActivity.this, "You have no location", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-            }
-            catch (SecurityException e)
-            {
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-    }
 
 }

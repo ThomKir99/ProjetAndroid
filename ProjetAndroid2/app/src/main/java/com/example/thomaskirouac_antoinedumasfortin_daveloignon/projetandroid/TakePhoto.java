@@ -1,16 +1,20 @@
 package com.example.thomaskirouac_antoinedumasfortin_daveloignon.projetandroid;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +24,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
@@ -196,6 +208,7 @@ public class TakePhoto extends AppCompatActivity implements SensorEventListener 
         Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
         Photo photo = new Photo(bitmap);
         photo.setOrientation(mCurrentDegree);
+        Localisation localisation = new Localisation(this,photo, this);
         MainActivity.currentUser.addPhoto(photo);
         imageView.setImageBitmap(bitmap);
         setPictureAnimation(imageView);
@@ -245,4 +258,6 @@ public class TakePhoto extends AppCompatActivity implements SensorEventListener 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+
 }

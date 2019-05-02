@@ -8,8 +8,8 @@ public class Photo {
     private Bitmap photoBitmap;
     private Bitmap thumbnail;
     private double orientation;
-    private float longitude;
-    private float latitude;
+    private double longitude;
+    private double latitude;
 
     public Photo(Bitmap photoBitMap){
         this.photoBitmap = photoBitMap;
@@ -28,11 +28,11 @@ public class Photo {
         return orientation;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
@@ -40,11 +40,11 @@ public class Photo {
         this.orientation = orientation;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 }
