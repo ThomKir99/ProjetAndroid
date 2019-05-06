@@ -44,7 +44,6 @@ public class SeePicture extends AppCompatActivity {
     }
 
     private void addPhoto() {
-        ScrollView scrollView = findViewById(R.id.scrollViewPhoto);
         LinearLayout linearLayout = findViewById(R.id.linearLayoutPhoto);
       for(Photo photo:MainActivity.currentUser.getPhoto()){
 
@@ -118,8 +117,4 @@ public class SeePicture extends AppCompatActivity {
         startActivity(mapIntent);
     }
 
-    private void showMessage(String text) {
-
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
 }

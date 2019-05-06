@@ -69,7 +69,6 @@ public class TakePhoto extends AppCompatActivity implements SensorEventListener 
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         initListener();
-        initialisationSensor();
     }
 
     private void initListener() {
@@ -109,21 +108,7 @@ public class TakePhoto extends AppCompatActivity implements SensorEventListener 
         setPic();
     }
 
-    private void initialisationSensor(){
 
-        mySensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-        List<Sensor> mySensors = mySensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
-
-        if(mySensors.size() > 0){
-            mySensorManager.registerListener(mySensorEventListener, mySensors.get(0), SensorManager.SENSOR_DELAY_NORMAL);
-            sersorrunning = true;
-        }
-        else{
-            Toast.makeText(this, "No ORIENTATION Sensor", Toast.LENGTH_LONG).show();
-            sersorrunning = false;
-            finish();
-        }
-    }
 
     private SensorEventListener mySensorEventListener = new SensorEventListener() {
         @Override
